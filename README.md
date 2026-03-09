@@ -20,7 +20,7 @@ Use this skill for **cloud** API; for adult/restricted content or local inferenc
 
 ### Option A: Install via ClawHub (recommended)
 
-If this skill is published on [ClawHub](https://clawhub.ai), install with:
+The skill is published on [ClawHub](https://clawhub.ai), install with:
 
 ```bash
 npx clawhub@latest install lightx2v
@@ -39,8 +39,8 @@ This installs the skill into your OpenClaw workspace `skills` folder. Then set `
 ### Option B: Install from source (git + install.sh)
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/openclaw-skill-lightx2v.git
-cd openclaw-skill-lightx2v
+git clone https://github.com/xinyiqin/lightx2v_ai_generation_skills.git
+cd lightx2v_ai_generation_skills
 ./install.sh
 ```
 

@@ -107,7 +107,7 @@ For local files: read file, base64-encode, and set `{ "type": "base64", "data": 
 
 1. **List models** — `GET $LIGHTX2V_CLOUD_URL/api/v1/model/list` with header `Authorization: Bearer $LIGHTX2V_CLOUD_TOKEN`. Choose a `model_cls` whose `task` matches the user request (t2i, i2i, t2v, i2v, s2v, animate).
 2. **Submit** — `POST /api/v1/task/submit` with JSON body as above. Remember `task_id` from the response.
-3. **Poll** — Every few seconds call `GET /api/v1/task/query?task_id=<task_id>` until `status` is `SUCCEED`, `FAILED`, or `CANCELLED`. On `FAILED`, report `error` from the response.
+3. **Poll** — Call `GET /api/v1/task/query?task_id=<task_id>` every 5–10 seconds until `status` is `SUCCEED`, `FAILED`, or `CANCELLED`. Video tasks (i2v, s2v, t2v, animate) can take several minutes; do not timeout too early. On `FAILED`, report `error` from the response.
 4. **Result URL** — For success, call `GET /api/v1/task/result_url?task_id=<task_id>&name=output_image` (t2i/i2i) or `&name=output_video` (t2v/i2v/s2v/animate). Return the `url` from the JSON to the user.
 
 ## Helper Script
@@ -184,7 +184,9 @@ Preset voices; same base URL and token.
 
 **⚠️ IMPORTANT - Resource ID:** Each voice requires the correct `resource_id` from the voice list. The script `tts_generate.sh` fetches the list and fills it automatically.
 
-**🎭 Voice Instructions (语音指令):** Only **v2.0 voices** support emotion instructions like `【温柔地】【严肃地】【兴奋地】` in the text, or use `--context-texts "用沉稳专业的语气"` for tone control.
+**🎭 Voice Instructions (语音指令):** Only **v2.0 preset voices** support `context_texts` and in-text markers like `【温柔地】`; **v1.0 preset voices and cloned voices do NOT** — leave `context_texts` empty and avoid relying on 【】 for those.
+
+**⚠️ TTS response is binary:** The generate endpoint returns **binary audio/mpeg** (mp3). **Do NOT** store it in a bash variable (e.g. `RESP=$(curl ...)`) — that truncates at null bytes and corrupts the file. Always redirect directly to a file: `curl ... > out.mp3`. Then validate (e.g. non-empty file, or `head -c 10 out.mp3 | grep -q ID3`). Storing in a variable can cause "ignored null byte in input" and broken audio.
 
 Response: binary **audio/mpeg** (mp3). Save to file (e.g. `--output out.mp3`) and return path to user.
 
@@ -249,67 +251,43 @@ Always ensure `LIGHTX2V_CLOUD_TOKEN` (and optionally `LIGHTX2V_CLOUD_URL`) are s
 
 ---
 
-## 把本 Skill 传到 GitHub
+## Troubleshooting
 
-若你想把 **lightx2v** 作为独立仓库发布到 GitHub（方便他人 `git clone` 或通过 clawhub 安装），可按以下步骤操作。
+### "Could not validate credentials" (401)
 
-### 1. 在 GitHub 上建仓库
+All LightX2V endpoints require the `Authorization: Bearer $TOKEN` header. This error usually means:
 
-- 打开 https://github.com/new
-- 仓库名建议：`openclaw-skill-lightx2v` 或 `lightx2v-openclaw-skill`
-- 选择 **Public**，可不勾选 “Add a README”（本地已有文件）
-- 创建后记下仓库地址，例如：`https://github.com/你的用户名/openclaw-skill-lightx2v.git`
+1. **Header missing** — Every curl/request must include `-H "Authorization: Bearer $LIGHTX2V_CLOUD_TOKEN"`.
+2. **Token not exported** — Values in openclaw.json are not auto-injected. Before running scripts or curl, run `export LIGHTX2V_CLOUD_TOKEN="..."` (or read from config and export).
+3. **Token format** — No extra quotes or spaces; token may be expired or invalid.
 
-### 2. 在本地只针对 lightx2v 建新仓库并推送
-
-在**本机**新开一个目录，只放 skill 内容并初始化 git，再推送到 GitHub：
+**Quick check:**
 
 ```bash
-# 新建目录并进入
-mkdir -p /tmp/openclaw-skill-lightx2v && cd /tmp/openclaw-skill-lightx2v
-
-# 复制当前 skill 内容（仅 skill 自身，不含 workspace 其他文件）
-cp -r /home/gongruihao/.openclaw/workspace/skills/lightx2v/* .
-
-# 初始化 git 并首次提交
-git init
-git add .
-git commit -m "Initial commit: LightX2V OpenClaw skill"
-
-# 添加远程并推送（替换为你的 GitHub 仓库地址）
-git remote add origin https://github.com/你的用户名/openclaw-skill-lightx2v.git
-git branch -M main
-git push -u origin main
+echo "Token length: $(echo -n "$LIGHTX2V_CLOUD_TOKEN" | wc -c)"
+curl -s -H "Authorization: Bearer $LIGHTX2V_CLOUD_TOKEN" \
+  "${LIGHTX2V_CLOUD_URL:-https://x2v.light-ai.top}/api/v1/voices/list" | head -3
 ```
 
-若已有 `install.sh`、`README.md` 等，放在 skill 根目录一并复制即可；没有的话可在仓库里后续再加。
+### TTS / "ignored null byte in input" or corrupted MP3
 
-### 3. 可选：加 .gitignore
-
-在仓库根目录创建 `.gitignore`，避免把本地私密或临时文件推上去：
-
-```
-.env
-*.local
-__pycache__/
-.DS_Store
-```
-
-然后执行：
+TTS returns **binary** data. Do not use command substitution:
 
 ```bash
-git add .gitignore && git commit -m "Add .gitignore" && git push
+# ❌ Wrong — corrupts audio
+TTS_RESPONSE=$(curl ... /api/v1/tts/generate)
+echo "$TTS_RESPONSE" > audio.mp3
+
+# ✅ Correct — direct to file
+curl -s -X POST -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
+  -d '{"text":"...","voice_type":"...","resource_id":"..."}' \
+  "$BASE_URL/api/v1/tts/generate" > audio.mp3
 ```
 
-### 4. 他人安装方式
+Validate: `[ -s audio.mp3 ] && head -c 10 audio.mp3 | grep -q ID3`.
 
-安装方式可写在仓库的 README 里，例如：
+### Other
 
-```bash
-git clone https://github.com/你的用户名/openclaw-skill-lightx2v.git
-cd openclaw-skill-lightx2v
-# 将 SKILL.md 与 scripts/ 复制到 OpenClaw 的 skills 目录，或运行你的 install.sh
-cp -r . ~/.openclaw/workspace/skills/lightx2v/
-```
-
-若你后续做了 `install.sh`（参考 openclaw-xhs），也可以写「运行 `./install.sh` 即可安装」。
+- **Model not found:** Call `GET /api/v1/model/list` and pick a `model_cls` that supports the task (t2i, i2i, s2v, etc.).
+- **Voice / resource_id:** Each voice in voices/list has its own `resource_id`; use the one from the list for that `voice_type`.
+- **Large result files:** Prefer returning the result **URL** from `result_url` (or local path) rather than embedding large files in messages; some clients have size limits.
