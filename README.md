@@ -1,4 +1,4 @@
-# 🎬 LightX2V — Free AI Image & Video Skill
+# 🎬 X2V-AI-Video-Skill — Free AI Image & Video Skill
 
 **中文说明:** [README_zh.md](README_zh.md)
 

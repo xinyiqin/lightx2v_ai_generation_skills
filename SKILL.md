@@ -1,10 +1,12 @@
 ---
 name: lightx2v
+title: X2V 图影
 description: LightX2V cloud API for images (t2i, i2i), video (t2v, i2v, s2v, flf2v, animate), TTS, and voice clone. Use when the user asks to generate or edit images, create video from text or image, produce digital human (talking head) video, first-last frame video, convert text to speech, or clone a voice—and content is not adult/restricted (otherwise use lightx2v-local).
 homepage: https://x2v.light-ai.top
 metadata:
   openclaw:
     emoji: "🎬"
+    displayName: "X2V Studio"
     requires:
       env: ["LIGHTX2V_CLOUD_TOKEN"]
     primaryEnv: "LIGHTX2V_CLOUD_TOKEN"
