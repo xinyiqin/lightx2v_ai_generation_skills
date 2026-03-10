@@ -32,7 +32,7 @@ TTS 与语音克隆走独立接口（见 SKILL.md），无需 `model_cls`。
 ## 📌 要求
 
 - 已安装并配置 [OpenClaw](https://openclaw.ai)
-- 在 [x2v.light-ai.top](https://x2v.light-ai.top) 获取 LightX2V 云端 token
+- LightX2V 云端 token — **获取方式：** [获取 Token 说明（飞书文档）](https://pgzodr3heu.feishu.cn/wiki/LuYOwNkrMiXEGLkqbHXcahBonhg?from=from_copylink) \| [x2v.light-ai.top](https://x2v.light-ai.top)
 - 免费额度：每日 100 次任务提交
 
 ## 🚀 安装
@@ -53,7 +53,7 @@ cd lightx2v_ai_generation_skills
 
 | 变量 | 必填 | 说明 |
 |------|------|------|
-| `LIGHTX2V_CLOUD_TOKEN` | 是 | 在 https://x2v.light-ai.top 获取的 API token |
+| `LIGHTX2V_CLOUD_TOKEN` | 是 | API token，获取方式见 [获取 Token 说明（飞书）](https://pgzodr3heu.feishu.cn/wiki/LuYOwNkrMiXEGLkqbHXcahBonhg?from=from_copylink) |
 | `LIGHTX2V_CLOUD_URL` | 否 | 接口地址（默认 `https://x2v.light-ai.top`） |
 
 示例：

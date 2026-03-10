@@ -32,7 +32,7 @@ TTS and voice clone use separate endpoints (see SKILL.md); no `model_cls` needed
 ## 📌 Requirements
 
 - [OpenClaw](https://openclaw.ai) installed and configured
-- LightX2V cloud access token from [x2v.light-ai.top](https://x2v.light-ai.top)
+- LightX2V cloud access token — **how to get it:** [Get token (Feishu doc)](https://pgzodr3heu.feishu.cn/wiki/LuYOwNkrMiXEGLkqbHXcahBonhg?from=from_copylink) \| [x2v.light-ai.top](https://x2v.light-ai.top)
 - Free tier: 100 task submissions per day
 
 ## 🚀 Install
@@ -53,7 +53,7 @@ Set in `~/.openclaw/openclaw.json` under `skills.entries.lightx2v.env` (or in th
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `LIGHTX2V_CLOUD_TOKEN` | Yes | API token from https://x2v.light-ai.top |
+| `LIGHTX2V_CLOUD_TOKEN` | Yes | API token — see [how to get token (Feishu)](https://pgzodr3heu.feishu.cn/wiki/LuYOwNkrMiXEGLkqbHXcahBonhg?from=from_copylink) |
 | `LIGHTX2V_CLOUD_URL` | No | Base URL (default: `https://x2v.light-ai.top`) |
 
 Example:
