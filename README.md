@@ -2,6 +2,12 @@
 
 **中文说明:** [README_zh.md](README_zh.md)
 
+## Use Cases
+
+![LightX2V example: virtual boyfriend video, co-creation video, and feature overview](assets/readme-example-lightx2v.png)
+
+*Left: virtual boyfriend video (TTS + i2v/s2v). Middle: AI co-creation video from script. Right: feature overview (t2i, i2i, t2v, i2v, s2v, flf2v, TTS, voice clone).*
+
 > **Free** AI image, video, TTS, and voice clone — use it for **full AI comic drama**, **AI MV**, **AI digital-human voiceover**, or deploy on [OpenClaw](https://openclaw.ai) as a **virtual boyfriend/girlfriend**. Powered by the open-source [LightX2V](https://github.com/ModelTC/LightX2V) free API; try the cloud at [x2v.light-ai.top](https://x2v.light-ai.top).  
 > 👋 **Join our WeChat group! LightX2V Rotbot WeChat ID: `random42seed`**
 
@@ -96,12 +102,6 @@ Step-by-step guides for multi-step workflows (e.g. digital-human-video, storyboa
 | 🎬 **Digital human video** | Scene image + TTS → s2v → talking-head video | [digital-human-video.md](examples/digital-human-video.md) |
 | 🎥 **One-sentence to video** | t2i/i2i → one key image → i2v → short video | [one-sentence-to-video.md](examples/one-sentence-to-video.md) |
 | 💕 **Virtual boyfriend/girlfriend** | Persona (SOUL.md) → scene image + TTS/s2v or i2v → companion video or voice; *OpenClaw: set bot personality first* | [virtual-boyfriend-video.md](examples/virtual-boyfriend-video.md) |
-
-### Example (virtual boyfriend + AI co-creation)
-
-![LightX2V example: virtual boyfriend video, co-creation video, and feature overview](assets/readme-example-lightx2v.png)
-
-*Left: virtual boyfriend video (TTS + i2v/s2v). Middle: AI co-creation video from script. Right: feature overview (t2i, i2i, t2v, i2v, s2v, flf2v, TTS, voice clone).*
 
 ## ⚠️ Data & privacy
 
